@@ -29,7 +29,7 @@ get-history > C:\DFIR\Results\PS_History_$env:username.csv
 #End of Powershell History
 
 #PreFetch Files
-C:\DFIR\Tools\PECmd.exe -d "C:\Windows\Prefetch" --csv C:\DFIR\Results\
+C:\DFIR\Tools\PECmd.exe -d "C:\Windows\Prefetch" --csv C:\DFIR\Results\ | out-null
 #End of PreFetch Files
 
 #Shim Cache
