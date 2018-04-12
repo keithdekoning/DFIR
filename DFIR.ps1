@@ -4,11 +4,11 @@ This script is a Powershell to gather artifacts for IR in Windows Enviroments.
 #>
 
 #Memory Aquisition
-C:\DFIR\Tools\Dumpit.exe /Q /O C:\DFIR\Results\Memory_$env:username.dmp
+C:\DFIR\Tools\Dumpit.exe /Q /O C:\DFIR\Results\Memory_$env:username.dmp | Wait-Process
 #End of Memory Aquisition
 
 #Autoruns
-c:\DFIR\Tools\autorunsc64.exe -a * -s -t -h -c -o C:\DFIR\Results\Autoruns_$env:username.csv
+c:\DFIR\Tools\autorunsc64.exe -a * -s -t -h -c -o C:\DFIR\Results\Autoruns_$env:username.csv | Wait-Process
 #End of Autoruns
 
 #Netstat
