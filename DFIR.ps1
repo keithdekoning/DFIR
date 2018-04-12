@@ -41,7 +41,7 @@ Copy C:\Windows\appcompat\Programs\recentfilecache.bcf C:\DFIR\Results\
 #End of Recent File Cache
 
 #AMCache
-Copy C:\Windows\Appcompat\Programs\Amcache.hve C:\DFIR\Results
+Copy C:\Windows\Appcompat\Programs\Amcache.hve C:\DFIR\Results\
 #End of AMCache
 
 <#
