@@ -3,29 +3,37 @@
 This script is a Powershell to gather artifacts for IR in Windows Enviroments. 
 #>
 
+#Define variables
+
+#File Path and Name
+$PathArtifacts = "C:\DFIR\Results\DFIR-$env:COMPUTERNAME-$env:username-$(((get-date).ToUniversalTime()).ToString("yyyy-MM-dd-hh-mm-ss-")).xlsx"
+$PathMemory = "C:\DFIR\Results\Memory\Memory-$env:COMPUTERNAME-$env:username-$(((get-date).ToUniversalTime()).ToString("yyyy-MM-dd-hh-mm-ss-")).dmp"
+
+#Script
+
 #Memory Aquisition
-C:\DFIR\Tools\Dumpit.exe /Q /O C:\DFIR\Results\Memory_$env:username.dmp | Wait-Process
+C:\DFIR\Tools\Dumpit.exe /Q /O $PathMemory
 #End of Memory Aquisition
 
 #Autoruns
-c:\DFIR\Tools\autorunsc64.exe -a * -s -t -h -c -o C:\DFIR\Results\Autoruns_$env:username.csv | Wait-Process
+c:\DFIR\Tools\autorunsc64.exe -a * -s -t -h -c -o "C:\DFIR\Results\Autoruns_$env:username.csv" 
 #End of Autoruns
 
-#Netstat
-netstat -q -b -f -o > C:\DFIR\Results\Netstat_Connections_$env:username.txt
-netstat -r > C:\DFIR\Results\RouteTable_$env:username.txt
-#End of Netstat
+#Network
+Get-NetTCPConnection | Select-Object LocalAddress, LocalPort, RemoteAddress, RemotePort, State, AppliedSetting, OwningProcess, CreationTime | Export-Excel -worksheetname "NETIPConnections" $PathArtifacts
+Get-NetIPInterface | Select-Object ifIndex, InterfaceAlias, AddressFamily, InterfaceMetric, Dhcp, ConnectionState | Sort-Object ifindex | Export-Excel -WorkSheetname "NETIPInterfaces" $Pathartifacts
+#End of Network
 
 #DNS
-get-dnsclientcache > C:\DFIR\Results\DNS_$env:username.txt
+get-dnsclientcache | Export-Excel -WorkSheetname "DNS Cache" $PathArtifacts
 #End of DNS
 
 #UserList
-Get-ItemProperty -path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\*' | ft profileimagepath,pschildname > C:\DFIR\Results\Userslist_$env:username.txt
+Get-ItemProperty -path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\*' | select-object profileimagepath,pschildname | export-Excel -WorkSheetname "User List" $PathArtifacts
 #End of UserList
 
 #Powershell History
-get-history > C:\DFIR\Results\PS_History_$env:username.csv
+get-history | Export-Excel -WorkSheetname "Powershell History" $PathArtifacts
 #End of Powershell History
 
 #PreFetch Files
